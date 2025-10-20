@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.kata.spring.boot_security.demo.dto.UserCreateDto;
-import ru.kata.spring.boot_security.demo.exception.UserNotFoundException;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -39,14 +38,10 @@ public class AdminController {
 
     @PostMapping("/add")
     public String addUser(@ModelAttribute UserCreateDto userDto,
-                          RedirectAttributes redirectAttributes)
-    {
-        try {
-            userService.saveUser(userDto);
-            redirectAttributes.addFlashAttribute("successMessage", "User added successfully!");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
+                          RedirectAttributes redirectAttributes) {
+        userService.saveUser(userDto);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "User added successfully!");
         return "redirect:/admin";
     }
 
@@ -54,25 +49,17 @@ public class AdminController {
     public String updateUser(@ModelAttribute UserCreateDto userDto,
                              @RequestParam("userId") Long userId,
                              RedirectAttributes redirectAttributes) {
-        try {
-            userService.updateUser(userDto, userId);
-            redirectAttributes.addFlashAttribute("successMessage", "User updated successfully!");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
+        userService.updateUser(userDto, userId);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "User updated successfully!");
         return "redirect:/admin";
     }
 
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            userService.deleteUser(id);
-            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully!");
-        } catch (UserNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "User not found!");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
+        userService.deleteUser(id);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "User deleted successfully!");
         return "redirect:/admin";
     }
 }
